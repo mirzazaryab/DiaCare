@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to Your Healing Space{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg border-0 rounded-4 p-4 animate__animated animate__fadeIn">
+  <div class="card-body">
+    <h2 class="card-title text-center text-primary fw-bold mb-4" style="font-family: 'Segoe UI', sans-serif;">
+      Your Healing Journey 🌱
+    </h2>
+
+    {% if summary %}
+      <div class="alert alert-success text-center fs-5" role="alert">
+        {{ summary.text }}
+      </div>
+    {% endif %}
+
+    <div class="mb-4">
+      <h4 class="text-muted fw-semibold mb-2">Progress Tracker</h4>
+      <div class="progress" style="height: 24px; border-radius: 12px;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-gradient-success text-dark fw-bold"
+             role="progressbar"
+             style="width: {% if logs|length > 0 %}{{ logs|length }}0{% else %}0{% endif %}%;"
+             aria-valuenow="{% if logs|length > 0 %}{{ logs|length }}0{% else %}0{% endif %}"
+             aria-valuemin="0" aria-valuemax="100">
+          {% if logs|length > 0 %}You're doing great! {{ logs|length }} logs added.{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <h3 class="mt-5 text-info fw-bold">📊 Glucose History</h3>
+    <canvas id="glucoseChart" class="mb-3" height="100"></canvas>
+
+    <table class="table table-hover table-bordered rounded-3 overflow-hidden">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Fasting (mg/dL)</th>
+          <th>Postprandial (mg/dL)</th>
+          <th>HbA1c (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr class="{% if log.fasting < 70 or log.fasting > 180 or log.postprandial < 70 or log.postprandial > 180 %}table-danger{% else %}table-success{% endif %}">
+            <td>{{ log.timestamp|date:"Y-m-d H:i" }}</td>
+            <td>{{ log.fasting|default:"N/A" }}</td>
+            <td>{{ log.postprandial|default:"N/A" }}</td>
+            <td>{{ log.hba1c|default:"N/A" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById('glucoseChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [{% for log in logs %}'{{ log.timestamp|date:"Y-m-d H:i" }}',{% endfor %}],
+      datasets: [
+        {
+          label: 'Fasting Glucose',
+          data: [{% for log in logs %}{{ log.fasting|default:"null" }},{% endfor %}],
+          borderColor: '#007BFF',
+          backgroundColor: 'rgba(0, 123, 255, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Postprandial Glucose',
+          data: [{% for log in logs %}{{ log.postprandial|default:"null" }},{% endfor %}],
+          borderColor: '#28A745',
+          backgroundColor: 'rgba(40, 167, 69, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: false,
+          suggestedMax: 300,
+          ticks: {
+            stepSize: 50
+          },
+          grid: {
+            color: ctx => {
+              if (ctx.tick.value < 70 || ctx.tick.value > 180) return '#FFC107'; // warning
+              return '#D4EDDA'; // calm green
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          labels: { color: '#495057' }
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'index',
+          intersect: false
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

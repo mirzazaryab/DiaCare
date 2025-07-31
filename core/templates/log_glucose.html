@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Track Your Glucose{% endblock %}
+
+{% block content %}
+<style>
+  .motivational-text {
+    font-size: 1.1rem;
+    color: #5a5a5a;
+    margin-bottom: 1.5rem;
+  }
+  .card {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    background: linear-gradient(145deg, #ffffff, #f2f2f2);
+  }
+  .card-title {
+    font-weight: bold;
+    color: #4A90E2;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  label {
+    font-weight: 500;
+  }
+  .form-control {
+    border-radius: 10px;
+  }
+  .btn-primary {
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .btn-primary:hover {
+    background-color: #3A78C2;
+  }
+</style>
+
+<div class="card mx-auto mt-4 p-4" style="max-width: 550px;">
+  <div class="card-body">
+    <h2 class="card-title text-center">Track Your Glucose</h2>
+    <p class="text-center motivational-text">
+      🌟 A small step each day leads to big changes. Keep logging to keep winning!
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="fasting">🕔 Fasting Glucose (mg/dL)</label>
+        <input type="number" step="0.1" name="fasting" id="fasting" class="form-control" placeholder="e.g. 90">
+      </div>
+      <div class="mb-3">
+        <label for="postprandial">🍽️ Postprandial Glucose (mg/dL)</label>
+        <input type="number" step="0.1" name="postprandial" id="postprandial" class="form-control" placeholder="e.g. 140">
+      </div>
+      <div class="mb-4">
+        <label for="hba1c">🧪 HbA1c (%)</label>
+        <input type="number" step="0.1" name="hba1c" id="hba1c" class="form-control" placeholder="e.g. 6.5">
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">📥 Submit Log</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

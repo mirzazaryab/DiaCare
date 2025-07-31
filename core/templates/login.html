@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Login - DiaCare{% endblock %}
+{% block content %}
+<style>
+  .login-card {
+    max-width: 480px;
+    background: linear-gradient(145deg, #fdfdfd, #f1f1f1);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+
+  .login-card .card-body {
+    padding: 2rem 2rem;
+  }
+
+  .login-title {
+    font-weight: 700;
+    color: #3366cc;
+    text-align: center;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .motivational-quote {
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+    color: #888;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="card login-card mx-auto mt-5">
+  <div class="card-body">
+    <h2 class="login-title">Welcome Back to DiaCare</h2>
+    <p class="login-subtitle">Log in to continue your journey of better care and connection.</p>
+    <p class="motivational-quote">"Together, we can manage diabetes — one step at a time."</p>
+
+    {% if error %}
+      <div class="alert alert-danger text-center">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label" for="email">Email Address</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="you@example.com" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 fw-bold">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <small>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></small>
+    </div>
+  </div>
+</div>
+{% endblock %}

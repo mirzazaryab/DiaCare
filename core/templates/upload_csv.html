@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Upload CSV{% endblock %}
+{% block content %}
+<div class="card mx-auto" style="max-width: 500px;">
+  <div class="card-body">
+    <h2 class="card-title text-center">Upload Glucometer Data</h2>
+    <p class="text-center motivational-text">Easily import your readings!</p>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label" for="csv_file">CSV File (timestamp,fasting,postprandial)</label>
+        <input type="file" name="csv_file" id="csv_file" class="form-control" accept=".csv" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Upload</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
